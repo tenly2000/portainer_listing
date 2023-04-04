@@ -1,0 +1,12 @@
+{
+  "domain": "portainer",
+  "name": "Portainer",
+  "version": "2023.4.1",
+  "codeowners": ["@tenly"],
+  "dependencies": [],
+  "documentation": "",
+  "integration_type": "hub",
+  "requirements": ["requests"],
+  "iot_class": "local_polling",
+  "issue_tracker": ""
+}
