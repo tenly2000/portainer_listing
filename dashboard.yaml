@@ -1,0 +1,83 @@
+views:
+  - theme: Backend-selected
+    title: Home
+    type: custom:masonry-layout
+    layout:
+      width: 250
+      max_cols: 4
+    badges: []
+    cards:
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: Containers - 192.168.1.15
+          theme: Fluent Blue
+          show_header_toggle: true
+          state_color: true
+        filter:
+          include:
+            - entity_id: sensor.*_nas15*
+              options:
+                secondary_info: >-
+                  Status: [[ state_attr( entity, "Status") ]], Image: [[
+                  state_attr( entity, "Image") ]]
+        show_empty: true
+        sort:
+          method: state
+          reverse: false
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: Containers - 192.168.1.10
+          theme: Fluent Blue
+          show_header_toggle: true
+          state_color: true
+        filter:
+          include:
+            - entity_id: sensor.*pi10*
+              options:
+                secondary_info: >-
+                  Status: [[ state_attr( entity, "Status") ]], Image: [[
+                  state_attr( entity, "Image") ]]
+        show_empty: true
+        sort:
+          method: state
+          reverse: false
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: Containers - 192.168.1.220
+          theme: Fluent Blue
+          show_header_toggle: true
+          state_color: true
+        filter:
+          include:
+            - entity_id: sensor.*deb220*
+              options:
+                secondary_info: >-
+                  Status: [[ state_attr( entity, "Status") ]], Image: [[
+                  state_attr( entity, "Image") ]]
+        show_empty: true
+        sort:
+          method: state
+          reverse: false
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: Containers - 192.168.1.60
+          theme: Fluent Blue
+          show_header_toggle: true
+          state_color: true
+        filter:
+          include:
+            - entity_id: sensor.*deb60*
+              options:
+                secondary_info: >-
+                  Status: [[ state_attr( entity, "Status") ]], Image: [[
+                  state_attr( entity, "Image") ]]
+        show_empty: true
+        sort:
+          method: state
+          reverse: false
+title: Portainer Servers
+
