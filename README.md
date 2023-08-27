@@ -1,9 +1,51 @@
 # portainer_listing
 
+## What it does
+A very simple Home Assistant custom component to query a portainer server for a list of containers.
+It creates a sensor for the server itself, named sensor.portainer_server_<servername> and then a sensor for each container on the server, named sensor.portainer_<servername>_<containername>.  Each sensor has several extra attributes such as how long it's been running, what image it's running, and the url to quickly get to that server.
+- I've only tested this with HTTP.  It may need some tweaking to work with HTTPS portainer servers.
+
+## What you'll need
+1. A docker host with portainer running and an open non-HTTPS-Port (You might want to open 9000)
+2. A Home Assistant instance
+3. 10 Minutes or less.
+
+## Installation
+Check out your Home Assistant's ```custom_components``` folder, make a subdirectory called ```portainer``` and copy the files ```__init__.py```, ```manifest.json``` and ```sensor.py```.
+Alternatively, you can run ```git clone https://github.com/tenly2000/portainer_listing.git portainer``` from within ```custom_components```. You can ignore other files like ```README.md```.
+**You'll need to restart Home Assistant now!**
+
+The plugin can not be configured via the UI, so you'll need to write some YAML. You'll need to add instances of the ```sensor``` integration with the platform ```portainer```. You'll find this in your configuration.yaml, or if you did choose to split your configuration into multiple files, in one of those. If you don't have a ```sensor```-section in your configuration files, simply create one.
+Every configuration entry needs to define the following variables:
+
+| Variable | Required | Description                                                            | Example                                          |
+|----------|----------|------------------------------------                                    | --------                                         |
+| url      | yes      | The URL (including Protocol and Port), where your Portainer instance can be reached | ```http://nas15local:9000```        |
+| name     | yes      | How you want your Portainer instance to be shown inside Home Assitant  | ```nas15```                                      |
+| username | yes      | Valid username to your portainer instance                              | ```username```                                   |
+| password | yes      | Valid password to the username you gave before                         | ```supersecurepassword```                        |
+
+It is recommended, to use [Home Assistans feature for storing secrets](https://www.home-assistant.io/docs/configuration/secrets/), in order to not directly include them in your configuration.yaml.
+
+```yaml
+sensor:
+    - platform: portainer
+      url: http://<hostname, fqdn or ip>:9000
+      name:  nas15
+      username: !secret port_user 
+      password: !secret port_pass
+# To monitor multiple docker hosts, you can add more instances as you need:
+    - platform: portainer
+      url: http://<hostname, fqdn or ip>:8080 # If you chose to open port 9000 as port 8080, for example
+      name: pi10
+      username: !secret port_user # If you have multiple instances with different credentials, make sure to create individual secret variables!
+      password: !secret port_pass
+```
+
+## Why and how it's made
+
 This component was created by GPT-4 over 3 2-hour sessions.
 The component does exactly what I needed/wanted and it is quite likely to fall far short of what you were hoping for - so take it, extend it - and then re-share it!  This was just an experiment for me to see if I could convince GPT-4 to create a basic custom component that works without having to write a single line of code.  It's not something that I plan to support, extend or develop further - but if it is useful to you, take it and do with it as you will.
-
-A very simple Home Assistant custom component to query a portainer server for a list of containers
 
 I have Portainer running on my NAS, 2 Raspberry Pi's and 2 Debian VM's and I was finding it hard to remember what containers were running on which servers - so I searched for a Portainer integration.  I found one that seemed pretty robust but looked like it was only intended to interact with a single Portainer server co-existing with Home Assistant - and I think it was also marked as deprecated?
 
@@ -19,28 +61,10 @@ But just know that it **IS** possible to get GPT-4 to create a working custom co
 
 When you're trying to understand some of the Home Assistant documentation - that doesn't have any examples - just paste it in to ChatGPT and ask it to generate some examples for you!  I've only been doing it for a couple of days so far - but I already find it a huge time saver.
 
-It's configured by adding
-sensor:
-    - platform: portainer
-      url: http://192.168.1.15:9000
-      name:  nas15
-      username: !secret port_user
-      password: !secret port_pass
-    - platform: portainer
-      url: http://192.168.1.10:9000
-      name: pi10
-      username: !secret port_user
-      password: !secret port_pass
-
-And it creates a sensor for the server itself, named sensor.portainer_server_<servername> and then a sensor for each container on the server, named sensor.portainer_<servername>_<containername>.  Each sensor has several extra attributes such as how long it's been running, what image it's running, and the url to quickly get to that server.
+## How it could look
 
 The Dashboard was created usign the auto-entities card from HACS.  I included my dashboard code in a file named dashboard.yaml but it won't work unless you first install the auto-entities component.  https://github.com/thomasloven/lovelace-auto-entities
 
 <img width="1409" alt="Screen Shot PortainerServers" src="https://user-images.githubusercontent.com/33942031/229692431-ba636ff8-bb5c-4f0e-a6cb-523efbc81619.png">
 <img width="1072" alt="Screen Shot Portainer Server" src="https://user-images.githubusercontent.com/33942031/229692468-cc57ecb0-b47c-4546-8496-883fd7b76cdf.png">
 <img width="1073" alt="Screen Shot Portainer Container" src="https://user-images.githubusercontent.com/33942031/229692495-32fc7b0d-2ad6-41cc-aa0c-9f7846790dd1.png">
-
-There are only 3 files required.  
-Copy them into a folder named 'portainer' under your 'custom_components' folder, restart Home Assistant and then add the settings into configuration.yaml 
-- I've only tested this with HTTP.  It may need some tweaking to work with HTTPS portainer servers.
-
